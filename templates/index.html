@@ -35,31 +35,27 @@ href="{{ url_for('static', filename='style.css') }}">
     </div>
 </nav>
 
-
 <div class="container-fluid mt-4">
 
     <div class="row g-4">
 
         <!-- LEFT PANEL -->
         <div class="col-lg-3">
-
             <div class="side-card">
                 <h4>🔥 Match Insights</h4>
                 <p>AI powered prediction engine for IPL matches.</p>
             </div>
 
             <div class="side-card">
-                <h4>⭐ Fantasy Captain Picks</h4>
-                <p>Trending captain and vice-captain selections.</p>
+                <h4>⭐ Fantasy Picks</h4>
+                <p>Best players insights.</p>
             </div>
 
             <div class="side-card sponsor">
-                <h4>🏆 Premium Sponsor</h4>
-                <p>Advanced Match Analytics</p>
+                <h4>🏆 Analytics</h4>
+                <p>Model based predictions</p>
             </div>
-
         </div>
-
 
         <!-- CENTER -->
         <div class="col-lg-6">
@@ -67,164 +63,149 @@ href="{{ url_for('static', filename='style.css') }}">
             <div class="main-card">
 
                 <div class="hero-title text-center">
-
                     <h1>IPL WIN PREDICTOR</h1>
-                    <p>
-                        Broadcast-style live win prediction
-                    </p>
-
+                    <p>Live win probability engine</p>
                 </div>
 
                 <div class="row g-4 mt-3">
 
+                    <!-- BATSMAN -->
                     <div class="col-md-6">
                         <label class="form-label">Batting Team</label>
+                        <select id="batting_team" class="form-select custom-input">
 
-                        <select id="batting_team"
-                                class="form-select custom-input">
-
-                            {% for team in teams %}
-                            <option>{{ team }}</option>
-                            {% endfor %}
+                            <option>Mumbai Indians</option>
+                            <option>Chennai Super Kings</option>
+                            <option>Kolkata Knight Riders</option>
+                            <option>Royal Challengers Bangalore</option>
+                            <option>Sunrisers Hyderabad</option>
+                            <option>Rajasthan Royals</option>
+                            <option>Delhi Capitals</option>
+                            <option>Kings XI Punjab</option>
+                            <option>Deccan Chargers</option>
+                            <option>Gujarat Lions</option>
 
                         </select>
                     </div>
 
+                    <!-- BOWLING -->
                     <div class="col-md-6">
                         <label class="form-label">Bowling Team</label>
+                        <select id="bowling_team" class="form-select custom-input">
 
-                        <select id="bowling_team"
-                                class="form-select custom-input">
-
-                            {% for team in teams %}
-                            <option>{{ team }}</option>
-                            {% endfor %}
+                            <option>Mumbai Indians</option>
+                            <option>Chennai Super Kings</option>
+                            <option>Kolkata Knight Riders</option>
+                            <option>Royal Challengers Bangalore</option>
+                            <option>Sunrisers Hyderabad</option>
+                            <option>Rajasthan Royals</option>
+                            <option>Delhi Capitals</option>
+                            <option>Kings XI Punjab</option>
+                            <option>Deccan Chargers</option>
+                            <option>Gujarat Lions</option>
 
                         </select>
                     </div>
 
+                    <!-- CITY -->
                     <div class="col-md-12">
                         <label class="form-label">Host City</label>
+                        <select id="city" class="form-select custom-input">
 
-                        <select id="city"
-                                class="form-select custom-input">
-
-                            {% for city in cities %}
-                            <option>{{ city }}</option>
-                            {% endfor %}
+                            <option>Mumbai</option>
+                            <option>Bangalore</option>
+                            <option>Chennai</option>
+                            <option>Delhi</option>
+                            <option>Kolkata</option>
+                            <option>Hyderabad</option>
+                            <option>Pune</option>
+                            <option>Sharjah</option>
+                            <option>Abu Dhabi</option>
+                            <option>Ahmedabad</option>
+                            <option>Jaipur</option>
+                            <option>Mohali</option>
+                            <option>Visakhapatnam</option>
+                            <option>Rajkot</option>
+                            <option>Indore</option>
+                            <option>Ranchi</option>
+                            <option>Raipur</option>
+                            <option>Kanpur</option>
+                            <option>Durban</option>
+                            <option>Cape Town</option>
+                            <option>Centurion</option>
+                            <option>Johannesburg</option>
 
                         </select>
                     </div>
 
                     <div class="col-md-4">
                         <label>Target</label>
-                        <input id="target"
-                               class="form-control custom-input"
-                               type="number">
+                        <input id="target" type="number" class="form-control custom-input">
                     </div>
 
                     <div class="col-md-4">
-                        <label>Current Score</label>
-                        <input id="score"
-                               class="form-control custom-input"
-                               type="number">
+                        <label>Score</label>
+                        <input id="score" type="number" class="form-control custom-input">
                     </div>
 
                     <div class="col-md-4">
                         <label>Overs</label>
-                        <input id="overs"
-                               class="form-control custom-input"
-                               type="number"
-                               step="0.1">
+                        <input id="overs" type="number" step="0.1" class="form-control custom-input">
                     </div>
 
                     <div class="col-md-12">
                         <label>Wickets Fallen</label>
-                        <input id="wickets"
-                               class="form-control custom-input"
-                               type="number">
+                        <input id="wickets" type="number" class="form-control custom-input">
                     </div>
 
                 </div>
 
                 <div class="text-center mt-5">
-
-                    <button
-                        class="predict-btn"
-                        onclick="predict()">
-
+                    <button class="predict-btn" onclick="predict()">
                         <i class="fas fa-chart-line"></i>
                         Predict Probabilities
-
                     </button>
-
                 </div>
 
                 <!-- RESULT -->
                 <div id="resultBox" class="result-box mt-5 d-none">
 
-                    <h2 class="text-center mb-4">
-                        Match Probability
-                    </h2>
+                    <h2 class="text-center mb-4">Match Probability</h2>
 
                     <div class="team-card">
-
                         <div class="d-flex justify-content-between">
                             <h5 id="battingText"></h5>
                             <h5 id="battingPercent"></h5>
                         </div>
-
-                        <div class="progress custom-progress">
-                            <div id="battingBar"
-                                 class="progress-bar win-bar">
-                            </div>
+                        <div class="progress">
+                            <div id="battingBar" class="progress-bar bg-success"></div>
                         </div>
-
                     </div>
 
                     <div class="team-card mt-4">
-
                         <div class="d-flex justify-content-between">
                             <h5 id="bowlingText"></h5>
                             <h5 id="bowlingPercent"></h5>
                         </div>
-
-                        <div class="progress custom-progress">
-                            <div id="bowlingBar"
-                                 class="progress-bar loss-bar">
-                            </div>
+                        <div class="progress">
+                            <div id="bowlingBar" class="progress-bar bg-danger"></div>
                         </div>
-
                     </div>
 
                 </div>
 
             </div>
-
         </div>
 
-        <!-- RIGHT PANEL -->
+        <!-- RIGHT -->
         <div class="col-lg-3">
-
             <div class="side-card">
-                <h4>📈 Top Match Stats</h4>
-                <p>Strike rate, run rate, wickets and trends.</p>
+                <h4>📈 Stats</h4>
+                <p>Live cricket analytics</p>
             </div>
-
-            <div class="side-card">
-                <h4>🎯 Prediction Engine</h4>
-                <p>ML model trained on IPL outcomes.</p>
-            </div>
-
-            <div class="side-card sponsor">
-                <h4>💰 Fan Zone</h4>
-                <p>Live fan polls & team insights.</p>
-            </div>
-
         </div>
 
     </div>
-
 </div>
 
 <script src="{{ url_for('static', filename='script.js') }}"></script>

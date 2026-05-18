@@ -6,31 +6,15 @@ import traceback
 app = Flask(__name__)
 
 # =====================
-# LOAD FILES
+# LOAD MODEL
 # =====================
 teams = pkl.load(open("team.pkl", "rb"))
 cities = pkl.load(open("city.pkl", "rb"))
 
-# pipeline model (IMPORTANT)
 model = pkl.load(open("pipe.pkl", "rb"))
 
 # =====================
-# TEAM NAME FIX (VERY IMPORTANT)
-# =====================
-team_map = {
-    "MI": "Mumbai Indians",
-    "CSK": "Chennai Super Kings",
-    "RCB": "Royal Challengers Bangalore",
-    "KKR": "Kolkata Knight Riders",
-    "SRH": "Sunrisers Hyderabad",
-    "PBKS": "Punjab Kings",
-    "KXIP": "Punjab Kings",
-    "DC": "Delhi Capitals",
-    "RR": "Rajasthan Royals"
-}
-
-# =====================
-# HOME ROUTE
+# HOME
 # =====================
 @app.route("/")
 def home():
@@ -41,28 +25,23 @@ def home():
     )
 
 # =====================
-# PREDICT ROUTE
+# PREDICT
 # =====================
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
         data = request.get_json()
 
-        # raw input
         batting_team = data["batting_team"]
         bowling_team = data["bowling_team"]
         city = data["city"]
-
-        # convert abbreviations → full names
-        batting_team = team_map.get(batting_team, batting_team)
-        bowling_team = team_map.get(bowling_team, bowling_team)
 
         target = int(data["target"])
         score = int(data["score"])
         overs = float(data["overs"])
         wickets_fell = int(data["wickets"])
 
-        # feature engineering
+        # Feature engineering
         runs_left = target - score
         balls_left = 120 - int(overs * 6)
         wickets_remaining = 10 - wickets_fell
@@ -70,7 +49,7 @@ def predict():
         crr = score / overs if overs > 0 else 0
         rrr = (runs_left * 6) / balls_left if balls_left > 0 else 0
 
-        # input dataframe (MUST MATCH TRAINING)
+        # IMPORTANT: must match training columns
         input_df = pd.DataFrame([{
             "batting_team": batting_team,
             "bowling_team": bowling_team,
@@ -83,30 +62,21 @@ def predict():
             "rrr": rrr
         }])
 
-        # prediction
         result = model.predict_proba(input_df)
-
-        win = round(result[0][1] * 100)
-        loss = round(result[0][0] * 100)
 
         return jsonify({
             "batting_team": batting_team,
             "bowling_team": bowling_team,
-            "win": win,
-            "loss": loss
+            "win": round(result[0][1] * 100),
+            "loss": round(result[0][0] * 100)
         })
 
     except Exception as e:
-        print("❌ ERROR IN /predict")
+        print("ERROR:")
         traceback.print_exc()
 
-        return jsonify({
-            "error": str(e)
-        }), 500
+        return jsonify({"error": str(e)}), 500
 
 
-# =====================
-# RUN APP
-# =====================
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000)
