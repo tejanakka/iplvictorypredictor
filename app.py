@@ -57,16 +57,16 @@ def predict():
         # MATCHING MODEL FEATURES EXACTLY
         # =====================
         input_df = pd.DataFrame([{
-            "batting_team": batting_team,
-            "bowling_team": bowling_team,
-            "city": city,
-            "Score": score,
-            "Wickets": wickets_remaining,
-            "Remaining Balls": balls_left,
-            "target_left": runs_left,
-            "crr": crr,
-            "rrr": rrr
-        }])
+    "batting_team": batting_team,
+    "bowling_team": bowling_team,
+    "city": city,
+    "Score": score,
+    "Wickets": wickets_remaining,
+    "Remaining Balls": balls_left,
+    "target_left": runs_left,
+    "crr": crr,
+    "rrr": rrr
+}])
 
         # =====================
         # PREDICTION
