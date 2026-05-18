@@ -1,0 +1,298 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    overflow-x:hidden;
+    color:#fff;
+
+    background:
+    linear-gradient(
+    rgba(8,15,35,.82),
+    rgba(18,10,45,.88)
+    ),
+
+    url("https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=2070&auto=format&fit=crop");
+
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+}
+
+/* subtle lighting overlay */
+
+.page-overlay{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+
+    background:
+    radial-gradient(circle at top left,
+    rgba(255,215,0,.10),
+    transparent 20%),
+
+    radial-gradient(circle at right,
+    rgba(138,43,226,.18),
+    transparent 35%);
+}
+
+/* NAVBAR */
+
+.custom-nav{
+    background:rgba(255,255,255,.06);
+    backdrop-filter:blur(20px);
+    border-bottom:1px solid rgba(255,255,255,.12);
+    padding:18px 30px;
+}
+
+.navbar-brand{
+    font-weight:800 !important;
+    color:#fff !important;
+}
+
+.live-pill{
+    background:
+    linear-gradient(135deg,#FFD700,#ffae00);
+
+    color:#111;
+    padding:12px 24px;
+    border-radius:999px;
+    font-size:14px;
+    font-weight:800;
+
+    box-shadow:
+    0 0 25px rgba(255,215,0,.4);
+
+    animation:pulse 2s infinite;
+}
+
+/* SIDEBAR */
+
+.side-card{
+    background:rgba(255,255,255,.09);
+    border:1px solid rgba(255,255,255,.12);
+
+    backdrop-filter:blur(25px);
+
+    border-radius:28px;
+    padding:28px;
+    margin-bottom:22px;
+
+    transition:.35s ease;
+}
+
+.side-card:hover{
+    transform:translateY(-8px);
+
+    box-shadow:
+    0 10px 40px rgba(255,215,0,.18);
+}
+
+.side-card h4{
+    color:#fff;
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+.side-card p{
+    color:rgba(255,255,255,.82);
+    line-height:1.7;
+}
+
+.sponsor{
+    border:1px solid rgba(255,215,0,.4);
+}
+
+/* MAIN CARD */
+
+.main-card{
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(24px);
+
+    border-radius:36px;
+
+    padding:55px;
+
+    border:1px solid rgba(255,255,255,.12);
+
+    box-shadow:
+    0 20px 60px rgba(0,0,0,.45);
+}
+
+/* HERO */
+
+.hero-title h1{
+    font-size:4rem;
+    font-weight:800;
+    color:#fff;
+
+    text-shadow:
+    0 0 18px rgba(255,215,0,.15);
+}
+
+.hero-title p{
+    font-size:18px;
+    color:rgba(255,255,255,.82);
+}
+
+/* FORM */
+
+label,
+.form-label{
+    color:#fff;
+    font-weight:600;
+    margin-bottom:10px;
+}
+
+/* FIXED CONTRAST ISSUE */
+
+.custom-input{
+    background:rgba(255,255,255,.15)!important;
+    border:1px solid rgba(255,255,255,.18)!important;
+
+    border-radius:18px!important;
+    height:58px;
+
+    color:#fff!important;
+
+    padding-left:18px!important;
+
+    font-size:16px;
+}
+
+.custom-input:focus{
+    box-shadow:
+    0 0 0 4px rgba(255,215,0,.18)!important;
+
+    border-color:#FFD700!important;
+}
+
+.custom-input option{
+    color:#111;
+}
+
+input::placeholder{
+    color:#ddd;
+}
+
+/* BUTTON */
+
+.predict-btn{
+    border:none;
+
+    padding:18px 58px;
+
+    border-radius:20px;
+
+    font-size:20px;
+    font-weight:700;
+
+    color:#fff;
+
+    background:
+    linear-gradient(
+    135deg,
+    #6a11cb,
+    #2575fc
+    );
+
+    transition:.35s ease;
+
+    box-shadow:
+    0 10px 30px rgba(37,117,252,.35);
+}
+
+.predict-btn:hover{
+    transform:
+    translateY(-4px)
+    scale(1.02);
+
+    box-shadow:
+    0 18px 45px rgba(255,215,0,.22);
+}
+
+/* RESULT */
+
+.result-box{
+    animation:fadeUp .8s ease;
+}
+
+.team-card{
+    background:
+    rgba(255,255,255,.08);
+
+    padding:24px;
+
+    border-radius:24px;
+}
+
+.team-card h5{
+    color:#fff;
+}
+
+.custom-progress{
+    height:22px!important;
+    border-radius:999px!important;
+    background:
+    rgba(255,255,255,.12)!important;
+}
+
+.win-bar{
+    background:
+    linear-gradient(
+    90deg,
+    #00d084,
+    #00ff95
+    );
+}
+
+.loss-bar{
+    background:
+    linear-gradient(
+    90deg,
+    #ffb703,
+    #ffd60a
+    );
+}
+
+/* ANIMATION */
+
+@keyframes pulse{
+    50%{
+        transform:scale(1.05);
+    }
+}
+
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(30px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* MOBILE */
+
+@media(max-width:992px){
+
+    .main-card{
+        padding:30px;
+    }
+
+    .hero-title h1{
+        font-size:2.4rem;
+    }
+
+    .predict-btn{
+        width:100%;
+    }
+}

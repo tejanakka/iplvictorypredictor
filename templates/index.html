@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>IPL Broadcast Predictor</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="page-overlay"></div>
+
+<nav class="navbar navbar-dark navbar-expand-lg custom-nav px-4">
+    <div class="container-fluid">
+
+        <a class="navbar-brand fw-bold fs-2" href="#">
+            🏏 IPL Predictor
+        </a>
+
+        <span class="live-pill">
+            LIVE MATCH ANALYTICS
+        </span>
+
+    </div>
+</nav>
+
+
+<div class="container-fluid mt-4">
+
+    <div class="row g-4">
+
+        <!-- LEFT PANEL -->
+        <div class="col-lg-3">
+
+            <div class="side-card">
+                <h4>🔥 Match Insights</h4>
+                <p>AI powered prediction engine for IPL matches.</p>
+            </div>
+
+            <div class="side-card">
+                <h4>⭐ Fantasy Captain Picks</h4>
+                <p>Trending captain and vice-captain selections.</p>
+            </div>
+
+            <div class="side-card sponsor">
+                <h4>🏆 Premium Sponsor</h4>
+                <p>Advanced Match Analytics</p>
+            </div>
+
+        </div>
+
+
+        <!-- CENTER -->
+        <div class="col-lg-6">
+
+            <div class="main-card">
+
+                <div class="hero-title text-center">
+
+                    <h1>IPL WIN PREDICTOR</h1>
+                    <p>
+                        Broadcast-style live win prediction
+                    </p>
+
+                </div>
+
+                <div class="row g-4 mt-3">
+
+                    <div class="col-md-6">
+                        <label class="form-label">Batting Team</label>
+
+                        <select id="batting_team"
+                                class="form-select custom-input">
+
+                            {% for team in teams %}
+                            <option>{{ team }}</option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Bowling Team</label>
+
+                        <select id="bowling_team"
+                                class="form-select custom-input">
+
+                            {% for team in teams %}
+                            <option>{{ team }}</option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label">Host City</label>
+
+                        <select id="city"
+                                class="form-select custom-input">
+
+                            {% for city in cities %}
+                            <option>{{ city }}</option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Target</label>
+                        <input id="target"
+                               class="form-control custom-input"
+                               type="number">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Current Score</label>
+                        <input id="score"
+                               class="form-control custom-input"
+                               type="number">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Overs</label>
+                        <input id="overs"
+                               class="form-control custom-input"
+                               type="number"
+                               step="0.1">
+                    </div>
+
+                    <div class="col-md-12">
+                        <label>Wickets Fallen</label>
+                        <input id="wickets"
+                               class="form-control custom-input"
+                               type="number">
+                    </div>
+
+                </div>
+
+                <div class="text-center mt-5">
+
+                    <button
+                        class="predict-btn"
+                        onclick="predict()">
+
+                        <i class="fas fa-chart-line"></i>
+                        Predict Probabilities
+
+                    </button>
+
+                </div>
+
+                <!-- RESULT -->
+                <div id="resultBox" class="result-box mt-5 d-none">
+
+                    <h2 class="text-center mb-4">
+                        Match Probability
+                    </h2>
+
+                    <div class="team-card">
+
+                        <div class="d-flex justify-content-between">
+                            <h5 id="battingText"></h5>
+                            <h5 id="battingPercent"></h5>
+                        </div>
+
+                        <div class="progress custom-progress">
+                            <div id="battingBar"
+                                 class="progress-bar win-bar">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="team-card mt-4">
+
+                        <div class="d-flex justify-content-between">
+                            <h5 id="bowlingText"></h5>
+                            <h5 id="bowlingPercent"></h5>
+                        </div>
+
+                        <div class="progress custom-progress">
+                            <div id="bowlingBar"
+                                 class="progress-bar loss-bar">
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="col-lg-3">
+
+            <div class="side-card">
+                <h4>📈 Top Match Stats</h4>
+                <p>Strike rate, run rate, wickets and trends.</p>
+            </div>
+
+            <div class="side-card">
+                <h4>🎯 Prediction Engine</h4>
+                <p>ML model trained on IPL outcomes.</p>
+            </div>
+
+            <div class="side-card sponsor">
+                <h4>💰 Fan Zone</h4>
+                <p>Live fan polls & team insights.</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
