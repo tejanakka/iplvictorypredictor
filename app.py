@@ -11,7 +11,7 @@ app = Flask(__name__)
 teams = pkl.load(open("team.pkl", "rb"))
 cities = pkl.load(open("city.pkl", "rb"))
 
-model = pkl.load(open("pipe.pkl", "rb"))
+model = pkl.load(open("model.pkl", "rb"))
 
 
 # =====================
