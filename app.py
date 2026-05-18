@@ -5,10 +5,18 @@ import traceback
 
 app = Flask(__name__)
 
-# Load model and data
+# =========================
+# LOAD FILES
+# =========================
+
 teams = pkl.load(open("team.pkl", "rb"))
 cities = pkl.load(open("city.pkl", "rb"))
-model = pkl.load(open("model.pkl", "rb"))
+
+# ⚠️ IMPORTANT FIX:
+# Change THIS depending on your real file
+# If you have pipe.pkl use that, otherwise keep model.pkl
+
+model = pkl.load(open("pipe.pkl", "rb"))  # <-- FIXED LINE
 
 
 @app.route("/")
