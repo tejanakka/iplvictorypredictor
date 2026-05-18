@@ -5,18 +5,14 @@ import traceback
 
 app = Flask(__name__)
 
-# =========================
+# =====================
 # LOAD FILES
-# =========================
-
+# =====================
 teams = pkl.load(open("team.pkl", "rb"))
 cities = pkl.load(open("city.pkl", "rb"))
 
-# ⚠️ IMPORTANT FIX:
-# Change THIS depending on your real file
-# If you have pipe.pkl use that, otherwise keep model.pkl
-
-model = pkl.load(open("pipe.pkl", "rb"))  # <-- FIXED LINE
+# IMPORTANT: using PIPE model
+model = pkl.load(open("pipe.pkl", "rb"))
 
 
 @app.route("/")
@@ -49,13 +45,14 @@ def predict():
         crr = score / overs if overs > 0 else 0
         rrr = (runs_left * 6) / balls_left if balls_left > 0 else 0
 
+        # ✅ FIXED FEATURE NAMES (IMPORTANT)
         input_df = pd.DataFrame({
             "batting_team": [batting_team],
             "bowling_team": [bowling_team],
             "city": [city],
-            "Score": [score],
-            "Wickets": [wickets_remaining],
-            "Remaining Balls": [balls_left],
+            "current_score": [score],
+            "balls_left": [balls_left],
+            "wickets_remaining": [wickets_remaining],
             "target_left": [runs_left],
             "crr": [crr],
             "rrr": [rrr]
