@@ -11,11 +11,12 @@ app = Flask(__name__)
 teams = pkl.load(open("team.pkl", "rb"))
 cities = pkl.load(open("city.pkl", "rb"))
 
-model = pkl.load(open("model.pkl", "rb"))
+# IMPORTANT: MUST be PIPELINE (not raw model)
+model = pkl.load(open("pipe.pkl", "rb"))
 
 
 # =====================
-# HOME PAGE
+# HOME ROUTE
 # =====================
 @app.route("/")
 def home():
@@ -34,6 +35,7 @@ def predict():
     try:
         data = request.get_json()
 
+        # inputs
         batting_team = data["batting_team"]
         bowling_team = data["bowling_team"]
         city = data["city"]
@@ -43,9 +45,7 @@ def predict():
         overs = float(data["overs"])
         wickets_fell = int(data["wickets"])
 
-        # =====================
-        # FEATURE ENGINEERING (IMPORTANT)
-        # =====================
+        # feature engineering
         runs_left = target - score
         balls_left = 120 - int(overs * 6)
         wickets_remaining = 10 - wickets_fell
@@ -53,28 +53,24 @@ def predict():
         crr = score / overs if overs > 0 else 0
         rrr = (runs_left * 6) / balls_left if balls_left > 0 else 0
 
-        # =====================
-        # MATCHING MODEL FEATURES EXACTLY
-        # =====================
+        # IMPORTANT: must match training columns EXACTLY
         input_df = pd.DataFrame([{
-    "batting_team": batting_team,
-    "bowling_team": bowling_team,
-    "city": city,
-    "Score": score,
-    "Wickets": wickets_remaining,
-    "Remaining Balls": balls_left,
-    "target_left": runs_left,
-    "crr": crr,
-    "rrr": rrr
-}])
+            "batting_team": batting_team,
+            "bowling_team": bowling_team,
+            "city": city,
+            "Score": score,
+            "Wickets": wickets_remaining,
+            "Remaining Balls": balls_left,
+            "target_left": runs_left,
+            "crr": crr,
+            "rrr": rrr
+        }])
 
-        # =====================
-        # PREDICTION
-        # =====================
+        # prediction
         result = model.predict_proba(input_df)
 
-        win = int(round(result[0][1] * 100))
-        loss = int(round(result[0][0] * 100))
+        win = round(result[0][1] * 100)
+        loss = round(result[0][0] * 100)
 
         return jsonify({
             "batting_team": batting_team,
@@ -84,11 +80,16 @@ def predict():
         })
 
     except Exception as e:
-        print("ERROR IN /predict")
+        print("❌ ERROR IN /predict")
         traceback.print_exc()
 
-        return jsonify({"error": str(e)}), 500
+        return jsonify({
+            "error": str(e)
+        }), 500
 
 
+# =====================
+# RUN APP
+# =====================
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
