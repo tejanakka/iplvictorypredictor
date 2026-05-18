@@ -11,7 +11,7 @@ app = Flask(__name__)
 teams = pkl.load(open("team.pkl", "rb"))
 cities = pkl.load(open("city.pkl", "rb"))
 
-# IMPORTANT: MUST be PIPELINE (not raw model)
+# IMPORTANT: must be sklearn PIPELINE
 model = pkl.load(open("pipe.pkl", "rb"))
 
 
@@ -53,7 +53,7 @@ def predict():
         crr = score / overs if overs > 0 else 0
         rrr = (runs_left * 6) / balls_left if balls_left > 0 else 0
 
-        # IMPORTANT: must match training columns EXACTLY
+        # MUST MATCH TRAINING FEATURES EXACTLY
         input_df = pd.DataFrame([{
             "batting_team": batting_team,
             "bowling_team": bowling_team,
