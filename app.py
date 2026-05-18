@@ -6,13 +6,12 @@ import traceback
 app = Flask(__name__)
 
 # =====================
-# LOAD FILES
+# LOAD MODELS
 # =====================
 teams = pkl.load(open("team.pkl", "rb"))
 cities = pkl.load(open("city.pkl", "rb"))
 
-# IMPORTANT: using PIPE model
-model = pkl.load(open("pipe.pkl", "rb"))
+model = pkl.load(open("pipe.pkl", "rb"))  # MUST be trained pipeline
 
 
 @app.route("/")
@@ -29,6 +28,9 @@ def predict():
     try:
         data = request.get_json()
 
+        # =====================
+        # INPUTS
+        # =====================
         batting_team = data["batting_team"]
         bowling_team = data["bowling_team"]
         city = data["city"]
@@ -38,6 +40,9 @@ def predict():
         overs = float(data["overs"])
         wickets_fell = int(data["wickets"])
 
+        # =====================
+        # FEATURE ENGINEERING
+        # =====================
         runs_left = target - score
         balls_left = 120 - int(overs * 6)
         wickets_remaining = 10 - wickets_fell
@@ -45,19 +50,24 @@ def predict():
         crr = score / overs if overs > 0 else 0
         rrr = (runs_left * 6) / balls_left if balls_left > 0 else 0
 
-        # ✅ FIXED FEATURE NAMES (IMPORTANT)
-        input_df = pd.DataFrame({
-            "batting_team": [batting_team],
-            "bowling_team": [bowling_team],
-            "city": [city],
-            "current_score": [score],
-            "balls_left": [balls_left],
-            "wickets_remaining": [wickets_remaining],
-            "target_left": [runs_left],
-            "crr": [crr],
-            "rrr": [rrr]
-        })
+        # =====================
+        # MODEL INPUT (IMPORTANT)
+        # =====================
+        input_df = pd.DataFrame([{
+            "batting_team": batting_team,
+            "bowling_team": bowling_team,
+            "city": city,
+            "runs_left": runs_left,
+            "balls_left": balls_left,
+            "wickets": wickets_remaining,
+            "total_runs_x": target,
+            "crr": crr,
+            "rrr": rrr
+        }])
 
+        # =====================
+        # PREDICTION
+        # =====================
         result = model.predict_proba(input_df)
 
         win = round(result[0][1] * 100)
