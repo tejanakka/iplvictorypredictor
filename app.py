@@ -6,14 +6,17 @@ import traceback
 app = Flask(__name__)
 
 # =====================
-# LOAD MODELS
+# LOAD FILES
 # =====================
 teams = pkl.load(open("team.pkl", "rb"))
 cities = pkl.load(open("city.pkl", "rb"))
 
-model = pkl.load(open("pipe.pkl", "rb"))  # MUST be trained pipeline
+model = pkl.load(open("pipe.pkl", "rb"))
 
 
+# =====================
+# HOME PAGE
+# =====================
 @app.route("/")
 def home():
     return render_template(
@@ -23,14 +26,14 @@ def home():
     )
 
 
+# =====================
+# PREDICT ROUTE
+# =====================
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
         data = request.get_json()
 
-        # =====================
-        # INPUTS
-        # =====================
         batting_team = data["batting_team"]
         bowling_team = data["bowling_team"]
         city = data["city"]
@@ -41,7 +44,7 @@ def predict():
         wickets_fell = int(data["wickets"])
 
         # =====================
-        # FEATURE ENGINEERING
+        # FEATURE ENGINEERING (IMPORTANT)
         # =====================
         runs_left = target - score
         balls_left = 120 - int(overs * 6)
@@ -51,16 +54,16 @@ def predict():
         rrr = (runs_left * 6) / balls_left if balls_left > 0 else 0
 
         # =====================
-        # MODEL INPUT (IMPORTANT)
+        # MATCHING MODEL FEATURES EXACTLY
         # =====================
         input_df = pd.DataFrame([{
             "batting_team": batting_team,
             "bowling_team": bowling_team,
             "city": city,
-            "runs_left": runs_left,
-            "balls_left": balls_left,
-            "wickets": wickets_remaining,
-            "total_runs_x": target,
+            "Score": score,
+            "Wickets": wickets_remaining,
+            "Remaining Balls": balls_left,
+            "target_left": runs_left,
             "crr": crr,
             "rrr": rrr
         }])
@@ -70,8 +73,8 @@ def predict():
         # =====================
         result = model.predict_proba(input_df)
 
-        win = round(result[0][1] * 100)
-        loss = round(result[0][0] * 100)
+        win = int(round(result[0][1] * 100))
+        loss = int(round(result[0][0] * 100))
 
         return jsonify({
             "batting_team": batting_team,
@@ -84,9 +87,7 @@ def predict():
         print("ERROR IN /predict")
         traceback.print_exc()
 
-        return jsonify({
-            "error": str(e)
-        }), 500
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":
