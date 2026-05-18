@@ -11,9 +11,23 @@ app = Flask(__name__)
 teams = pkl.load(open("team.pkl", "rb"))
 cities = pkl.load(open("city.pkl", "rb"))
 
-# IMPORTANT: must be sklearn PIPELINE
+# pipeline model (IMPORTANT)
 model = pkl.load(open("pipe.pkl", "rb"))
 
+# =====================
+# TEAM NAME FIX (VERY IMPORTANT)
+# =====================
+team_map = {
+    "MI": "Mumbai Indians",
+    "CSK": "Chennai Super Kings",
+    "RCB": "Royal Challengers Bangalore",
+    "KKR": "Kolkata Knight Riders",
+    "SRH": "Sunrisers Hyderabad",
+    "PBKS": "Punjab Kings",
+    "KXIP": "Punjab Kings",
+    "DC": "Delhi Capitals",
+    "RR": "Rajasthan Royals"
+}
 
 # =====================
 # HOME ROUTE
@@ -26,7 +40,6 @@ def home():
         cities=sorted(cities)
     )
 
-
 # =====================
 # PREDICT ROUTE
 # =====================
@@ -35,10 +48,14 @@ def predict():
     try:
         data = request.get_json()
 
-        # inputs
+        # raw input
         batting_team = data["batting_team"]
         bowling_team = data["bowling_team"]
         city = data["city"]
+
+        # convert abbreviations → full names
+        batting_team = team_map.get(batting_team, batting_team)
+        bowling_team = team_map.get(bowling_team, bowling_team)
 
         target = int(data["target"])
         score = int(data["score"])
@@ -53,7 +70,7 @@ def predict():
         crr = score / overs if overs > 0 else 0
         rrr = (runs_left * 6) / balls_left if balls_left > 0 else 0
 
-        # MUST MATCH TRAINING FEATURES EXACTLY
+        # input dataframe (MUST MATCH TRAINING)
         input_df = pd.DataFrame([{
             "batting_team": batting_team,
             "bowling_team": bowling_team,
@@ -92,4 +109,4 @@ def predict():
 # RUN APP
 # =====================
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5000, debug=True)
